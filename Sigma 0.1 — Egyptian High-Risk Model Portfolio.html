@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="en" dir="ltr"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Sigma 0.1 — Egyptian High-Risk Model Portfolio</title>
+<style>
+:root{--bg:#0a0f1c;--p:rgba(20,30,52,.72);--bd:rgba(80,140,255,.2);--tx:#e6ecfa;--mu:#9aa9c8;--c:#22d3ee;--b:#3b82f6;--g:#d4a84b;--rd:#f87171;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg) linear-gradient(rgba(59,130,246,.06) 1px,transparent 1px) 0 0/32px 32px,linear-gradient(90deg,rgba(59,130,246,.06) 1px,transparent 1px) 0 0/32px 32px;color:var(--tx);font:15px/1.55 system-ui,"Segoe UI",Tahoma,sans-serif}
+main{max-width:1180px;margin:auto;padding:16px}
+h1{margin:0;font-size:1.9rem}h2{font-size:1.05rem;margin:0 0 10px;color:var(--c)}
+.p{background:var(--p);border:1px solid var(--bd);border-radius:14px;padding:16px;margin:14px 0;box-shadow:0 0 24px rgba(34,211,238,.05)}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.badge{border:1px solid var(--g);color:var(--g);border-radius:99px;padding:2px 10px;font-size:.78rem}
+.sim{border-color:var(--c);color:var(--c)}
+.warn{color:var(--rd)}.mu{color:var(--mu);font-size:.85rem}
+.grid{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}
+.card{background:rgba(10,18,34,.8);border:1px solid var(--bd);border-radius:12px;padding:12px}
+.card b{display:block;font-size:1.25rem;margin-top:4px}
+.two{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(340px,1fr))}
+button,input,select{font:inherit;background:#0e1830;color:var(--tx);border:1px solid var(--bd);border-radius:8px;padding:6px 10px}
+button{cursor:pointer}button.on{background:var(--b);border-color:var(--c)}
+:focus-visible{outline:2px solid var(--g);outline-offset:2px}
+input[type=number]{width:96px}
+table{border-collapse:collapse;width:100%;font-size:.88rem;display:block;overflow-x:auto}
+th,td{padding:5px 8px;border-bottom:1px solid var(--bd);text-align:start;white-space:nowrap}
+svg{width:100%;height:auto;display:block}.ch{position:relative}
+.tip{position:absolute;top:4px;inset-inline-start:8px;background:#000c;border:1px solid var(--bd);border-radius:8px;padding:4px 8px;font-size:.78rem;pointer-events:none;display:none}
+canvas{width:100%;height:340px;border-radius:10px;background:#070c18;touch-action:none;cursor:grab}
+.i{cursor:help;color:var(--g);font-size:.8rem}
+.dis{border:1px solid var(--g);border-radius:10px;padding:8px 12px;color:var(--g);font-size:.85rem}
+.sw{display:inline-block;width:22px;border-top:3px solid;vertical-align:middle;margin-inline:4px}
+@media(prefers-reduced-motion:no-preference){.card{transition:border-color .2s}.card:hover{border-color:var(--c)}}
+:root{--bg:#05080f;--p:rgba(10,16,28,.86);--bd:rgba(120,150,200,.16);--mu:#7f8da8;--mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+body{font-family:Inter,"SF Pro Text",system-ui,sans-serif;background-color:var(--bg);background-image:radial-gradient(ellipse at 15% -10%,rgba(34,211,238,.11),transparent 50%),radial-gradient(ellipse at 100% 0,rgba(59,130,246,.10),transparent 45%),linear-gradient(rgba(120,150,200,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(120,150,200,.05) 1px,transparent 1px);background-size:auto,auto,40px 40px,40px 40px}
+h1{font-size:1.7rem;font-weight:600;letter-spacing:-.02em;background:linear-gradient(90deg,#fff,#7dd3fc);-webkit-background-clip:text;background-clip:text;color:transparent}
+h2{font:600 .74rem var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--c);display:flex;gap:10px;align-items:center}
+h2::before{content:"";width:18px;height:2px;background:var(--g)}
+.p{border-radius:6px;backdrop-filter:blur(8px)}
+.card{border-radius:6px;border-top:2px solid var(--c);background:rgba(6,11,22,.9)}
+.card b{font:600 1.45rem var(--mono);letter-spacing:-.02em;color:#fff}
+.card>.mu:first-child{text-transform:uppercase;letter-spacing:.08em;font-size:.68rem}
+.card>.mu:nth-of-type(2){font-size:.66rem;color:var(--g)}
+.card>div.mu{font-size:.7rem;opacity:.8}
+button{border-radius:4px;font-size:.78rem;letter-spacing:.04em}
+button.on{background:rgba(34,211,238,.16);color:var(--c);border-color:var(--c)}
+.badge{border-radius:3px;font:.66rem var(--mono);text-transform:uppercase;letter-spacing:.08em}
+td,th,input,select,.tip,svg text{font-family:var(--mono)}
+th{font-size:.7rem;text-transform:uppercase;letter-spacing:.08em;color:var(--mu);font-weight:500}
+canvas{border:1px solid var(--bd);border-radius:6px}
+.dis{border-radius:4px;font-family:var(--mono);font-size:.74rem}
+</style></head><body><main id="app"><p class="mu">…</p></main>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+const SIM_EN="SIMULATED / ILLUSTRATIVE — NOT LIVE MARKET DATA";
+const T={en:{
+ title:"Sigma 0.1 — Egyptian High-Risk Model Portfolio",strat:"High-risk / Growth-oriented illustrative model",sim:SIM_EN,simS:"Simulated data — not live market data",
+ desc:"An illustrative model portfolio of Egyptian equities, T-bills and gold, built to demonstrate quantitative portfolio analytics. It is not a recommendation, not guaranteed, and not suitable as advice for any investor.",
+ cap:"Initial capital (EGP)",asof:"As-of date",rf:"Risk-free rate (demo assumption, %)",mode:"Method",rebal:"Monthly rebalanced",bh:"Buy-and-hold",scn:"Scenario",base:"Base",up:"Upside",down:"Downside",
+ scnNote:"Scenarios are illustrative simulations, not forecasts.",reset:"Reset to sample assumptions",pdf:"Download portfolio PDF",
+ val:"Simulated portfolio value",roi:"Simulated ROI",ann:"Annualized return",vol:"Annualized volatility",sh:"Sharpe ratio",mdd:"Max drawdown",bm:"EGX30 benchmark return (simulated)",
+ val_t:"Capital rebased at start of period times simulated growth of the weighted holdings.",roi_t:"ROI = (ending value − initial capital) / initial capital.",ann_t:"(end/start)^(252/days) − 1. Very short periods give extreme annualized figures.",vol_t:"Std. deviation of simulated daily returns × √252.",sh_t:"(Annualized return − risk-free rate) / annualized volatility.",mdd_t:"Largest peak-to-trough % decline in the selected simulated series.",bm_t:"Simulated EGX30-like index over the same period. Comparison only; not in the allocation.",
+ alloc:"Allocation (editable)",asset:"Asset",tick:"Ticker",w:"Weight %",amt:"EGP amount",contrib:"Contribution",wWarn:"Weights total {x}% — not 100%. Calculations use normalized weights.",
+ bub:"Bubble view",bar:"Allocation chart",bubNote:"Bubble size = weight; x = simulated volatility, y = simulated return; colour and label = asset class.",sel:"Selected",
+ s3d:"3D risk / return landscape",n3d:"Illustrative scenario visualization — not a forecast or actual market surface. Drag to rotate, wheel / buttons to zoom. Orange dot = current portfolio.",
+ ax:["Volatility %","Return %","Score (Sharpe-like)"],rst:"Reset view",
+ perf:"Portfolio vs EGX30 (indexed, simulated)",dd:"Drawdown",cb:"Asset contribution (approx., EGP-weighted)",pf:"Portfolio",bmk:"EGX30 (sim.)",
+ meth:"Risk & methodology",
+ m:["Daily frequency, 252 trading days per year; 1,008 seeded simulated days (4 years) ending on the as-of date. Dates are synthetic.","ROI = (ending value − initial capital) / initial capital.","Volatility = stdev of daily simulated returns × √252.","Sharpe = (annualized return − risk-free rate) / volatility. The risk-free rate is an editable demo assumption, not official market data.","Maximum drawdown = largest peak-to-trough percentage decline in the selected series.","Monthly rebalancing resets to target weights every 21 days; buy-and-hold lets weights drift. T-bills and gold are simulated like the stocks with different parameters.","Real results would depend on prices, dividends, fees, taxes, liquidity, rebalancing and data quality. Nothing here is actual EGX history."],
+ full:"Full",asLbl:"Asset names"},
+ ar:{title:"سيجما 0.1 — محفظة نموذجية مصرية عالية المخاطر",strat:"نموذج توضيحي عالي المخاطر / موجّه للنمو",sim:"محاكاة / توضيحي — ليست بيانات سوق حية",simS:"بيانات محاكاة — ليست بيانات سوق حية",
+ desc:"محفظة نموذجية توضيحية من الأسهم المصرية وأذون الخزانة والذهب لعرض تحليلات المحافظ الكمية. ليست توصية ولا مضمونة ولا تصلح كنصيحة لأي مستثمر.",
+ cap:"رأس المال الابتدائي (جنيه)",asof:"تاريخ البيانات",rf:"معدل الخالي من المخاطر (افتراض تجريبي %)",mode:"الطريقة",rebal:"إعادة توازن شهرية",bh:"شراء واحتفاظ",scn:"السيناريو",base:"أساسي",up:"صاعد",down:"هابط",
+ scnNote:"السيناريوهات محاكاة توضيحية وليست توقعات.",reset:"إعادة الافتراضات النموذجية",pdf:"تحميل PDF للمحفظة",
+ val:"القيمة المحاكاة للمحفظة",roi:"العائد المحاكى (ROI)",ann:"العائد السنوي",vol:"التذبذب السنوي",sh:"نسبة شارب",mdd:"أقصى تراجع",bm:"عائد EGX30 (محاكى)",
+ val_t:"رأس المال المُعاد أساسه في بداية الفترة × النمو المحاكى للمحفظة.",roi_t:"العائد = (القيمة النهائية − رأس المال) ÷ رأس المال.",ann_t:"(النهاية/البداية)^(252/الأيام) − 1. الفترات القصيرة تعطي أرقامًا سنوية مبالغًا فيها.",vol_t:"الانحراف المعياري للعوائد اليومية × √252.",sh_t:"(العائد السنوي − المعدل الخالي من المخاطر) ÷ التذبذب.",mdd_t:"أكبر هبوط نسبي من قمة إلى قاع في السلسلة المحاكاة.",bm_t:"مؤشر محاكى شبيه بـ EGX30 لنفس الفترة. للمقارنة فقط وليس ضمن التوزيع.",
+ alloc:"التوزيع (قابل للتعديل)",asset:"الأصل",tick:"الرمز",w:"الوزن %",amt:"المبلغ (جنيه)",contrib:"المساهمة",wWarn:"مجموع الأوزان {x}% وليس 100%. الحسابات تستخدم أوزانًا مُطبَّعة.",
+ bub:"فقاعات",bar:"مخطط التوزيع",bubNote:"حجم الفقاعة = الوزن؛ س = التذبذب المحاكى، ص = العائد المحاكى؛ اللون والتسمية = فئة الأصل.",sel:"المحدد",
+ s3d:"سطح المخاطر / العائد ثلاثي الأبعاد",n3d:"تصور توضيحي لسيناريو — وليس توقعًا ولا سطح سوق فعليًا. اسحب للتدوير، والعجلة/الأزرار للتكبير. النقطة البرتقالية = المحفظة الحالية.",
+ ax:["التذبذب %","العائد %","الدرجة (شبيه شارب)"],rst:"إعادة الضبط",
+ perf:"المحفظة مقابل EGX30 (مؤشر محاكى)",dd:"التراجع",cb:"مساهمة الأصول (تقريبية)",pf:"المحفظة",bmk:"EGX30 (محاكى)",
+ meth:"المخاطر والمنهجية",
+ m:["تكرار يومي، 252 يوم تداول سنويًا؛ 1008 أيام محاكاة ثابتة (4 سنوات) تنتهي في تاريخ البيانات. التواريخ اصطناعية.","العائد = (القيمة النهائية − رأس المال) ÷ رأس المال.","التذبذب = الانحراف المعياري للعوائد اليومية × √252.","شارب = (العائد السنوي − المعدل الخالي من المخاطر) ÷ التذبذب. المعدل افتراض تجريبي قابل للتعديل وليس بيانات رسمية.","أقصى تراجع = أكبر هبوط نسبي من قمة إلى قاع في السلسلة المختارة.","إعادة التوازن الشهرية تعيد الأوزان المستهدفة كل 21 يومًا؛ الشراء والاحتفاظ يترك الأوزان تنجرف. أذون الخزانة والذهب محاكاة بمعاملات مختلفة.","النتائج الحقيقية تعتمد على الأسعار والتوزيعات والرسوم والضرائب والسيولة وإعادة التوازن وجودة البيانات. لا شيء هنا يمثل تاريخ EGX الفعلي."],
+ full:"كامل"}};
+const A=[
+["CIB","COMI","Banking","بنك CIB",20,.22,.30],["Talaat Moustafa","TMGH","Real estate","طلعت مصطفى",20,.25,.38],["Elsewedy Electric","SWDY","Industrial","السويدي إلكتريك",15,.24,.35],
+["Edita","EFID","Consumer","إيديتا",12,.18,.30],["Abu Qir Fertilizers","ABUK","Materials","أبو قير للأسمدة",10,.20,.33],["Telecom Egypt","ETEL","Telecom","المصرية للاتصالات",8,.16,.30],
+["Eastern Company","EAST","Consumer","الشرقية",5,.15,.28],["Treasury bills","T-BILL","Fixed income","أذون الخزانة",5,.22,.01],["Gold","GOLD","Commodity","الذهب",5,.12,.16]];
+const COL=["#22d3ee","#3b82f6","#a78bfa","#34d399","#f59e0b","#f472b6","#d4a84b","#94a3b8","#fbbf24"];
+const CLS=[...new Set(A.map(a=>a[2]))],CC=c=>COL[CLS.indexOf(c)];
+const D0=()=>({lang:"en",cap:5e6,rf:20,mode:"rebal",scn:"base",per:"Full",view:"bubble",asOf:"2026-11-23",w:A.map(a=>a[4]),sel:0});
+let S=D0();
+const N=1008,PER={"1M":21,"3M":63,"6M":126,"1Y":252,"3Y":756,Full:N};
+const t=k=>(T[S.lang][k]??T.en[k]);
+const loc=()=>S.lang=="ar"?"ar-EG":"en-US";
+const fm=(v,d=0)=>new Intl.NumberFormat(loc(),{maximumFractionDigits:d,minimumFractionDigits:d}).format(v);
+const egp=v=>new Intl.NumberFormat(loc(),{style:"currency",currency:"EGP",maximumFractionDigits:0}).format(v);
+const pc=(v,d=1)=>fm(v*100,d)+"%";
+function rng(a){return()=>{a|=0;a=a+0x6D2B79F5|0;let x=Math.imul(a^a>>>15,1|a);x=x+Math.imul(x^x>>>7,61|x)^x;return((x^x>>>14)>>>0)/4294967296}}
+const SC={base:[0,1],up:[.08,.9],down:[-.12,1.3]},cache={};
+function gen(s){if(cache[s])return cache[s];const r=rng(2026),g=()=>Math.sqrt(-2*Math.log(r()+1e-12))*Math.cos(6.2832*r()),[sh,vm]=SC[s];
+ const zm=[],ze=A.map(()=>[]);for(let i=0;i<N;i++){zm.push(g());A.forEach((_,j)=>ze[j].push(g()))}
+ const R=A.map((a,j)=>{const tb=j==7,rho=tb?.05:.6,mu=a[5]+(tb?0:sh),sg=a[6]*(tb?1:vm);return zm.map((z,i)=>mu/252+sg/15.875*(rho*z+Math.sqrt(1-rho*rho)*ze[j][i]))});
+ const B=zm.map(z=>(.18+sh)/252+.25*vm/15.875*z);
+ const lv=x=>{let l=[1];x.forEach(v=>l.push(l[l.length-1]*(1+v)));return l};
+ return cache[s]={R,B:lv(B),L:R.map(lv)}}
+function calc(){const {R,B,L}=gen(S.scn),sum=S.w.reduce((a,b)=>a+b,0)||1,w=S.w.map(x=>x/sum),n=PER[S.per],s=N-n;
+ let h=w.map(x=>x*S.cap);const V=[S.cap];
+ for(let i=0;i<N;i++){h=h.map((x,j)=>x*(1+R[j][i]));let tot=h.reduce((a,b)=>a+b,0);if(S.mode=="rebal"&&(i+1)%21==0)h=w.map(x=>x*tot);V.push(tot)}
+ const v=V.slice(s).map(x=>x*S.cap/V[s]),b=B.slice(s).map(x=>100*x/B[s]),rt=v.slice(1).map((x,i)=>x/v[i]-1),
+ mean=rt.reduce((a,c)=>a+c,0)/rt.length,sd=Math.sqrt(rt.reduce((a,c)=>a+(c-mean)**2,0)/(rt.length-1));
+ const roi=v[n]/S.cap-1,ann=Math.pow(1+roi,252/n)-1,vol=sd*Math.sqrt(252),sharpe=(ann-S.rf/100)/vol;
+ let pk=v[0];const dd=v.map(x=>{pk=Math.max(pk,x);return x/pk-1});
+ const ctr=A.map((_,j)=>w[j]*S.cap*(L[j][N]/L[j][s]-1));
+ const ds=Array.from({length:n+1},(_,i)=>{const d=new Date(S.asOf+"T00:00:00Z");d.setUTCDate(d.getUTCDate()-Math.round((n-i)*1.4));return d.toISOString().slice(0,10)});
+ return{v,b,dd,roi,ann,vol,sharpe,mdd:Math.min(...dd),bret:b[n]/100-1,ctr,ds,w,sum}}
+const CH={};
+function lc(id,ser,pct){const W=600,H=230,m=44,all=ser.flatMap(s=>s.d),lo=Math.min(...all),hi=Math.max(...all),n=ser[0].d.length;
+ const X=i=>m+(W-m-8)*i/(n-1),Y=v=>H-24-(H-40)*(v-lo)/((hi-lo)||1),f=v=>pct?pc(v):fm(v,1);CH[id]={ser,f,n,dates:window.DT};
+ return`<div class="ch" data-id="${id}"><svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${ser.map(s=>s.n).join(" / ")}">${[0,.5,1].map(q=>{const v=lo+(hi-lo)*q;return`<line x1="${m}" x2="${W-8}" y1="${Y(v)}" y2="${Y(v)}" stroke="#3b82f633"/><text x="${m-4}" y="${Y(v)+4}" fill="#9aa9c8" font-size="10" text-anchor="end">${f(v)}</text>`}).join("")}
+ ${ser.map(s=>`<polyline fill="none" stroke="${s.c}" stroke-width="2" ${s.dash?`stroke-dasharray="${s.dash}"`:""} points="${s.d.map((v,i)=>X(i).toFixed(1)+","+Y(v).toFixed(1)).join(" ")}"/>`).join("")}
+ <text x="${m}" y="${H-6}" fill="#9aa9c8" font-size="10">${CH[id].dates[0]}</text><text x="${W-8}" y="${H-6}" fill="#9aa9c8" font-size="10" text-anchor="end">${CH[id].dates[n-1]}</text></svg><div class="tip"></div></div>
+ <p class="mu">${ser.map(s=>`<span class="sw" style="border-color:${s.c};border-top-style:${s.dash?"dashed":"solid"}"></span>${s.n}`).join(" ")} · ${t("simS")}</p>`}
+document.addEventListener("pointermove",e=>{const c=e.target.closest(".ch");document.querySelectorAll(".tip").forEach(x=>x.style.display="none");if(!c)return;const o=CH[c.dataset.id],r=c.querySelector("svg").getBoundingClientRect(),i=Math.max(0,Math.min(o.n-1,Math.round((e.clientX-r.left)/r.width*600-44)/(556)*(o.n-1)));const k=Math.round(i),tp=c.querySelector(".tip");tp.style.display="block";tp.innerHTML=o.dates[k]+"<br>"+o.ser.map(s=>s.n+": "+o.f(s.d[k])).join("<br>")});
+function bubble(c){const W=600,H=300,x=v=>50+(W-70)*(v-.05)/.4,y=v=>H-30-(H-50)*(v-.05)/.25;
+ return`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${t("bubNote")}"><text x="${W/2}" y="${H-6}" fill="#9aa9c8" font-size="11" text-anchor="middle">${t("ax")[0]}</text><text x="12" y="14" fill="#9aa9c8" font-size="11">${t("ax")[1]}</text>
+ ${A.map((a,j)=>{const r=8+Math.sqrt(c.w[j])*55;return`<g tabindex="0" role="button" data-sel="${j}" style="cursor:pointer"><circle cx="${x(a[6]+.03*(j==7))}" cy="${y(a[5])}" r="${r}" fill="${CC(a[2])}" fill-opacity=".45" stroke="${CC(a[2])}" stroke-width="${S.sel==j?3:1.5}"/><text x="${x(a[6]+.03*(j==7))}" y="${y(a[5])+4}" text-anchor="middle" font-size="10" fill="#fff">${a[1]}</text></g>`}).join("")}</svg>`}
+function bars(c){return A.map((a,j)=>`<div class="row"><span style="width:110px">${a[1]}</span><div style="flex:1;background:#0e1830;border-radius:6px"><div style="width:${c.w[j]*100}%;background:${CC(a[2])};border-radius:6px;padding:2px 6px;color:#001">${pc(c.w[j])}</div></div></div>`).join("")}
+function render(){const c=calc(),L=S.lang,ae=document.activeElement?.id,ar=L=="ar";document.documentElement.lang=L;document.documentElement.dir=ar?"rtl":"ltr";
+ const nm=j=>ar?A[j][3]:A[j][0],sel=S.sel,cards=[["val",egp(c.v[c.v.length-1])],["roi",pc(c.roi)],["ann",pc(c.ann)],["vol",pc(c.vol)],["sh",fm(c.sharpe,2)],["mdd",pc(c.mdd)],["bm",pc(c.bret)]];
+ CH.p={};window.DT=c.ds;const dates=c.ds;
+ const mk=(id,s,p)=>{CH[id]={dates};return lc(id,s,p)};
+ document.getElementById("app").innerHTML=`
+ <header class="p"><div class="row"><h1>${t("title")}</h1></div><div class="row" style="margin:8px 0"><span class="badge">${t("strat")}</span><span class="badge sim">${t("sim")}</span>
+ <button id="lg" aria-label="Language">${ar?"English":"العربية"}</button><button id="pdf">${t("pdf")}</button><button id="rs">${t("reset")}</button></div><p>${t("desc")}</p>
+ <div class="row"><label>${t("cap")} <input id="cap" type="number" min="1" step="100000" value="${S.cap}"></label><label>${t("asof")} <input id="asof" type="date" value="${S.asOf}"></label>
+ <label>${t("rf")} <input id="rf" type="number" step="0.5" value="${S.rf}"></label>
+ <label>${t("mode")} <select id="mode"><option value="rebal" ${S.mode=="rebal"?"selected":""}>${t("rebal")}</option><option value="bh" ${S.mode=="bh"?"selected":""}>${t("bh")}</option></select></label>
+ <label>${t("scn")} <select id="scn">${["base","up","down"].map(k=>`<option value="${k}" ${S.scn==k?"selected":""}>${t(k)}</option>`).join("")}</select></label></div><p class="mu">${t("scnNote")}</p>
+ <div class="row" role="group" aria-label="period">${Object.keys(PER).map(k=>`<button data-per="${k}" class="${S.per==k?"on":""}" aria-pressed="${S.per==k}">${k=="Full"?t("full"):k}</button>`).join("")}</div></header>
+ <section class="grid" aria-label="metrics">${cards.map(([k,v])=>`<div class="card"><span class="mu">${t(k)} <span class="i" tabindex="0" title="${t(k+"_t")}">ⓘ</span></span><b>${v}</b><span class="mu">${t("simS")}</span><div class="mu">${t(k+"_t")}</div></div>`).join("")}</section>
+ <section class="p"><h2>${t("alloc")}</h2>${Math.abs(c.sum-100)>.001?`<p class="warn" role="alert">⚠ ${t("wWarn").replace("{x}",fm(c.sum,1))}</p>`:""}
+ <table><tr><th>${t("asset")}</th><th>${t("tick")}</th><th>${t("w")}</th><th>${t("amt")}</th><th>${t("contrib")}</th></tr>${A.map((a,j)=>`<tr><td>${nm(j)}</td><td>${a[1]}</td><td><input id="w${j}" type="number" step="0.5" min="0" value="${S.w[j]}" aria-label="${a[1]}"></td><td>${egp(c.w[j]*S.cap)}</td><td>${egp(c.ctr[j])}</td></tr>`).join("")}</table></section>
+ <div class="two"><section class="p"><h2>${t("alloc")}</h2><div class="row"><button data-view="bubble" class="${S.view=="bubble"?"on":""}">${t("bub")}</button><button data-view="bar" class="${S.view=="bar"?"on":""}">${t("bar")}</button></div>
+ ${S.view=="bubble"?bubble(c):bars(c)}<p class="mu">${t("bubNote")}</p><p class="mu">${CLS.map(k=>`<span style="color:${CC(k)}">● ${k}</span>`).join(" ")}</p>
+ <div class="card"><b>${t("sel")}: ${nm(sel)} (${A[sel][1]})</b>${pc(c.w[sel])} · ${egp(c.w[sel]*S.cap)} · ${t("contrib")}: ${egp(c.ctr[sel])}<div class="mu">σ ${pc(A[sel][6],0)} · μ ${pc(A[sel][5],0)} (${t("simS")})</div></div></section>
+ <section class="p"><h2>${t("s3d")}</h2><canvas id="c3" aria-label="${t("s3d")}"></canvas><div class="row"><button id="zi">＋</button><button id="zo">－</button><button id="rv">${t("rst")}</button></div><p class="mu">${t("n3d")}</p></section></div>
+ <div class="two"><section class="p"><h2>${t("perf")}</h2>${mk("a",[{n:t("pf"),c:"#22d3ee",d:c.v.map(x=>100*x/S.cap)},{n:t("bmk"),c:"#d4a84b",dash:"6 4",d:c.b}])}</section>
+ <section class="p"><h2>${t("dd")}</h2>${mk("b",[{n:t("dd"),c:"#f87171",d:c.dd}],true)}</section></div>
+ <section class="p"><h2>${t("cb")}</h2><table>${A.map((a,j)=>`<tr><td>${a[1]}</td><td>${egp(c.ctr[j])}</td><td style="width:60%"><div style="background:${c.ctr[j]<0?"#f87171":CC(a[2])};height:10px;width:${Math.min(100,Math.abs(c.ctr[j])/Math.max(...c.ctr.map(Math.abs))*100)}%"></div></td></tr>`).join("")}</table><p class="mu">${t("simS")}</p></section>
+ <section class="p"><h2>${t("meth")}</h2><ul>${t("m").map(x=>`<li>${x}</li>`).join("")}</ul><p class="dis">${t("sim")}</p></section>`;
+ draw3(c);if(ae){const e=document.getElementById(ae);e&&e.focus()}}
+let yaw=.8,pit=.9,zm=1;
+function draw3(c){const cv=document.getElementById("c3");if(!cv)return;const d=devicePixelRatio||1,W=cv.clientWidth,H=cv.clientHeight;cv.width=W*d;cv.height=H*d;const g=cv.getContext("2d");if(!g){return}g.scale(d,d);
+ const rf=S.rf/100,Z=(vv,rr)=>Math.max(-2,Math.min(2,(rr-rf)/vv)),n=22,P=(x,y,z)=>{const a=x*Math.cos(yaw)-y*Math.sin(yaw),b=x*Math.sin(yaw)+y*Math.cos(yaw),s=Math.min(W,H)*.3*zm;return[W/2+a*s,H/2+(b*Math.cos(pit)-z*.5*Math.sin(pit+.3))*s*.9+H*.05,b]};
+ const V=i=>.05+.45*i/n,Rr=j=>-.1+.5*j/n,q=[];
+ for(let i=0;i<n;i++)for(let j=0;j<n;j++){const p=[[i,j],[i+1,j],[i+1,j+1],[i,j+1]].map(([a,b])=>P(a/n*2-1,b/n*2-1,Z(V(a),Rr(b))*.9)),z=Z(V(i),Rr(j));q.push([p,z,p.reduce((s,k)=>s+k[2],0)])}
+ q.sort((a,b)=>a[2]-b[2]);q.forEach(([p,z])=>{const u=(z+2)/4;g.fillStyle=`rgba(${Math.round(30+u*190)},${Math.round(120+u*60)},${Math.round(255-u*180)},.85)`;g.strokeStyle="#0a0f1c88";g.beginPath();p.forEach((k,i)=>i?g.lineTo(k[0],k[1]):g.moveTo(k[0],k[1]));g.closePath();g.fill();g.stroke()});
+ g.fillStyle="#9aa9c8";g.font="11px system-ui";[[ -1,1,0,t("ax")[0]],[1,-1,0,t("ax")[1]],[-1,-1,1.5,t("ax")[2]]].forEach(([x,y,z,s])=>{const p=P(x,y,z);g.fillText(s,p[0],p[1])});
+ const mx=Math.max(0,Math.min(1,(c.vol-.05)/.45))*2-1,my=Math.max(0,Math.min(1,(c.ann+.1)/.5))*2-1,pp=P(mx,my,Z(Math.max(.05,Math.min(.5,c.vol)),Math.max(-.1,Math.min(.4,c.ann)))*.9);g.fillStyle="#fb923c";g.beginPath();g.arc(pp[0],pp[1],6,0,7);g.fill();
+ g.fillStyle="#d4a84b";g.fillText(t("simS"),8,H-8);g.fillStyle="#22d3ee";g.fillText("■ low score",8,16);g.fillStyle="#fb923c";g.fillText("■ high score",90,16)}
+let drag=null;
+document.addEventListener("pointerdown",e=>{if(e.target.id=="c3")drag=[e.clientX,e.clientY]});document.addEventListener("pointerup",()=>drag=null);
+document.addEventListener("pointermove",e=>{if(drag){yaw+=(e.clientX-drag[0])/120;pit=Math.max(.2,Math.min(1.5,pit+(e.clientY-drag[1])/120));drag=[e.clientX,e.clientY];draw3(calc())}});
+document.addEventListener("wheel",e=>{if(e.target.id=="c3"){e.preventDefault();zm=Math.max(.5,Math.min(2.5,zm*(e.deltaY<0?1.1:.9)));draw3(calc())}},{passive:false});
+document.addEventListener("click",e=>{const b=e.target.closest("button,[data-sel]");if(!b)return;const id=b.id;
+ if(b.dataset.per)S.per=b.dataset.per;else if(b.dataset.view)S.view=b.dataset.view;else if(b.dataset.sel!==undefined)S.sel=+b.dataset.sel;
+ else if(id=="lg")S.lang=S.lang=="ar"?"en":"ar";else if(id=="rs")S=D0();else if(id=="pdf")return pdf();
+ else if(id=="zi")zm=Math.min(2.5,zm*1.2);else if(id=="zo")zm=Math.max(.5,zm/1.2);else if(id=="rv"){yaw=.8;pit=.9;zm=1}else return;render()});
+document.addEventListener("change",e=>{const i=e.target,id=i.id;if(id=="cap")S.cap=Math.max(1,+i.value||5e6);else if(id=="rf")S.rf=+i.value;else if(id=="asof"&&i.value)S.asOf=i.value;else if(id=="mode")S.mode=i.value;else if(id=="scn")S.scn=i.value;else if(/^w\d/.test(id))S.w[+id.slice(1)]=Math.max(0,+i.value||0);else return;render()});
+function pdf(){if(!window.jspdf){alert("jsPDF failed to load.");return}const{jsPDF}=window.jspdf,d=new jsPDF(),c=calc(),E=T.en,f=(v,k=1)=>(v*100).toFixed(k)+"%",e=v=>"EGP "+Math.round(v).toLocaleString("en-US");let y=18;
+ const H=s=>{d.setFont("helvetica","bold");d.setFontSize(12);d.text(s,14,y);y+=6;d.setFont("helvetica","normal");d.setFontSize(9)},L=s=>{d.splitTextToSize(s,182).forEach(l=>{if(y>275){d.addPage();y=18}d.text(l,14,y);y+=4.6})};
+ d.setFont("helvetica","bold");d.setFontSize(18);d.text("Sigma 0.1 - Egyptian High-Risk Model Portfolio",14,y);y+=8;d.setFontSize(9);d.setFont("helvetica","normal");
+ L(`Strategy: ${E.strat} | Currency: EGP | Initial capital: ${e(S.cap)} | As-of: ${S.asOf} | Period: ${S.per} | Scenario: ${S.scn} | Method: ${S.mode=="rebal"?"monthly rebalanced":"buy-and-hold"} | Risk-free (demo): ${S.rf}%`);y+=2;
+ d.setDrawColor(180,130,20);d.rect(14,y,182,12);d.setTextColor(150,100,0);d.text(SIM_EN+" - not actual investment results.",18,y+7.5);d.setTextColor(0);y+=20;
+ H("Allocation");A.forEach((a,j)=>{d.text(`${a[0]}`,14,y);d.text(a[1],80,y);d.text(f(c.w[j]),110,y);d.text(e(c.w[j]*S.cap),140,y);y+=5});y+=4;
+ H("Key simulated metrics");[["Simulated value",e(c.v[c.v.length-1])],["ROI",f(c.roi)],["Annualized return",f(c.ann)],["Annualized volatility",f(c.vol)],["Sharpe ratio",c.sharpe.toFixed(2)],["Max drawdown",f(c.mdd)],["EGX30 (simulated)",f(c.bret)]].forEach(([k,v])=>{d.text(k,14,y);d.text(v,80,y);y+=5});y+=4;
+ const ch=(s,col,x0,y0,w,h,ttl)=>{d.setFont("helvetica","bold");d.text(ttl,x0,y0-2);d.setFont("helvetica","normal");d.rect(x0,y0,w,h);const all=s.flatMap(q=>q.d),lo=Math.min(...all),hi=Math.max(...all);s.forEach((q,k)=>{d.setDrawColor(...col[k]);if(k)d.setLineDashPattern([2,1],0);else d.setLineDashPattern([],0);for(let i=1;i<q.d.length;i++)d.line(x0+w*(i-1)/(q.d.length-1),y0+h-h*(q.d[i-1]-lo)/(hi-lo||1),x0+w*i/(q.d.length-1),y0+h-h*(q.d[i]-lo)/(hi-lo||1))});d.setLineDashPattern([],0);d.setDrawColor(0)};
+ if(y>200){d.addPage();y=18}ch([{d:c.v.map(x=>100*x/S.cap)},{d:c.b}],[[0,120,200],[200,140,0]],14,y+4,182,50,"Portfolio (solid) vs EGX30 (dashed) - indexed, SIMULATED");y+=66;
+ ch([{d:c.dd}],[[200,40,40]],14,y+4,182,40,"Drawdown - SIMULATED");y+=56;
+ if(y>200){d.addPage();y=18}H("Asset contribution (simulated, approx.)");A.forEach((a,j)=>{d.text(a[1],14,y);d.text(e(c.ctr[j]),60,y);y+=5});y+=4;
+ H("Definitions, assumptions and limitations");E.m.forEach(L);L("Dates are synthetic. This document is an illustrative simulation, not a recommendation, forecast or guarantee.");
+ const n=d.getNumberOfPages();for(let i=1;i<=n;i++){d.setPage(i);d.setFontSize(8);d.text(`Sigma 0.1 - ${SIM_EN} - Page ${i}/${n}`,14,290)}
+ d.save("Sigma-0.1-portfolio.pdf")}
+render();addEventListener("resize",()=>draw3(calc()));
+</script></body></html>
